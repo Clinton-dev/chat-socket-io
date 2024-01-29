@@ -1,44 +1,31 @@
-const baseApiUrl = `http://127.0.0.1:5000/api/users/`;
+export const baseUrl = `http://127.0.0.1:5000/api`;
 
-// login user
-export const loginUser = async (data) => {
+export const postRequest = async (url, body) => {
   try {
-    const response = await fetch(baseApiUrl + "login", {
+    const response = await fetch(url, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(data),
+      body,
     });
-    const results = await response.json();
-    return results;
-  } catch (error) {
-    console.log(error);
-  }
-};
 
-//register user
-export const registerUser = async (data) => {
-  try {
-    const response = await fetch(baseApiUrl + "register", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
-    });
+    const data = await response.json();
 
     if (!response.ok) {
-      // Check response status directly
-      const errorData = await response.json(); // Parse error response
-      const message = errorData?.message ?? response.statusText; // Prioritize error message
+      let message;
+
+      if (data?.message) {
+        message = data.message;
+      } else {
+        message = data;
+      }
       return { error: true, message }; // Return structured error object
     }
 
-    const results = await response.json();
-    return results; // Return successful registration data
+    return data;
   } catch (error) {
-    console.error(error); // Log error for debugging
-    throw error; // Re-throw for higher-level handling
+    console.error(error);
+    throw error;
   }
 };

@@ -17,7 +17,7 @@ function Navbar() {
             <Link to="/login" className="link-light text-decoration-none">
               Login
             </Link>
-            <Link to="/login" className="link-light text-decoration-none">
+            <Link to="/register" className="link-light text-decoration-none">
               Register
             </Link>
           </Stack>

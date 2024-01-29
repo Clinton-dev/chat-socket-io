@@ -4,10 +4,11 @@ import { Alert, Button, Form, Row, Col, Stack } from "react-bootstrap";
 import { AuthContext } from "../context/AuthContext";
 
 function Register() {
-  const { registerInfor, updateRegisterInfor } = useContext(AuthContext);
+  const { registerInfor, updateRegisterInfor, registerUser, registerError } =
+    useContext(AuthContext);
   return (
     <div>
-      <Form>
+      <Form onSubmit={() => registerUser(registerInfor)}>
         <Row
           style={{
             height: "100vh",
@@ -51,9 +52,11 @@ function Register() {
               <Button variant="warning" type="submit">
                 Register
               </Button>
-              <Alert variant="danger">
-                <p>This is a alert—check it out!</p>
-              </Alert>
+              {registerError && (
+                <Alert variant="danger">
+                  <p>{registerError}</p>
+                </Alert>
+              )}
             </Stack>
           </Col>
         </Row>
