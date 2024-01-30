@@ -1,9 +1,13 @@
-import React from 'react'
+import { useContext } from "react";
+import { ChatContext } from "../context/ChatContext";
 
 function Chats() {
-  return (
-    <div>Chats</div>
-  )
+  const { userChats, chatErrors, chatLoading } = useContext(ChatContext);
+
+  console.log({ userChats });
+  console.log({ chatErrors });
+  console.log({ chatLoading });
+  return <div>Chats</div>;
 }
 
-export default Chats
+export default Chats;

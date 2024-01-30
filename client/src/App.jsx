@@ -10,11 +10,12 @@ import Register from "./pages/Register";
 
 import Navbar from "./components/Navbar";
 import { AuthContext } from "./context/AuthContext";
+import { ChatProvider } from "./context/ChatContext";
 
 function App() {
   const { user } = useContext(AuthContext);
   return (
-    <>
+    <ChatProvider user={user}>
       <Navbar />
       <Container className="text-secondary">
         <Routes>
@@ -24,7 +25,7 @@ function App() {
           <Route path="*" element={<Navigate to="/" />} />
         </Routes>
       </Container>
-    </>
+    </ChatProvider>
   );
 }
 
