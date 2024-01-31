@@ -36,7 +36,6 @@ export const AuthContextProvider = ({ children }) => {
 
   const registerUser = useCallback(
     async (e) => {
-      console.log(registerInfor);
       e.preventDefault();
       try {
         setIsRegisterLoading(true);
@@ -46,7 +45,6 @@ export const AuthContextProvider = ({ children }) => {
           JSON.stringify(registerInfor)
         );
 
-        console.log(response);
         setIsRegisterLoading(false);
 
         if (response.error) {
@@ -70,7 +68,6 @@ export const AuthContextProvider = ({ children }) => {
 
   const loginUser = useCallback(
     async (e) => {
-      console.log(loginInfor);
       e.preventDefault();
       try {
         setIsLoginLoading(true);
@@ -80,7 +77,6 @@ export const AuthContextProvider = ({ children }) => {
           JSON.stringify(loginInfor)
         );
 
-        console.log(response);
         setIsLoginLoading(false);
 
         if (response.error) {

@@ -4,15 +4,14 @@ import { Stack } from "react-bootstrap";
 
 import avatar from "../assets/avatar.svg";
 
-function UserChat({ chat, user, key }) {
+function UserChat({ chat, user }) {
   const { recipient } = useFetchRecipient(chat, user);
-  console.log({ recipient });
+  console.log("recipient:", recipient);
   return (
     <Stack
       direction="horizontal"
       gap={3}
       className="user-card align-items-center p-2 justify-content-between"
-      key={key}
       role="button"
     >
       <div className="d-flex">

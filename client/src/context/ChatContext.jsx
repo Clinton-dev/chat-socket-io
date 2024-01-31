@@ -1,4 +1,4 @@
-import { useState, createContext, useEffect } from "react";
+import { useState, createContext, useEffect, useCallback } from "react";
 import { getRequest, postRequest, baseUrl } from "../services/UsersSerivce";
 
 export const ChatContext = createContext();
@@ -8,6 +8,11 @@ export const ChatProvider = ({ children, user }) => {
 
   const [chatErrors, setChatErrors] = useState(null);
   const [chatLoading, setChatLoading] = useState(false);
+
+  const [currentChat, setCurrentChat] = useState(null);
+  const [messages, setMessages] = useState(null);
+  const [isMessagesLoading, setIsMessagesLoading] = useState(false);
+  const [messagesError, setMessagesError] = useState(null);
 
   const [friends, setFriends] = useState([]);
 
@@ -38,7 +43,7 @@ export const ChatProvider = ({ children, user }) => {
       setFriends(filteredFriends);
     };
     fetchUsers();
-  }, [user?._id, userChats]);
+  }, [user, userChats]);
 
   useEffect(() => {
     const fetchUserChats = async () => {
@@ -60,6 +65,48 @@ export const ChatProvider = ({ children, user }) => {
     fetchUserChats();
   }, [user]);
 
+  //TODO: Check why this is not reflecting in the db
+  const createChat = useCallback(async (firstId, secondId) => {
+    // create chat using api endpoint
+    const response = await postRequest(
+      `${baseUrl}/chats`,
+      JSON.stringify({ firstId, secondId })
+    );
+
+    console.log("Chat creation response", response);
+
+    if (response.error) {
+      return console.log("Chat creation error", response);
+    }
+
+    setUserChats((prevState) => [...prevState, response]);
+    // append the response which is a chat to list of users chats
+  }, []);
+
+  useEffect(() => {
+    const fetchMessages = async () => {
+      setIsMessagesLoading(true);
+      setMessagesError(null);
+      const response = await getRequest(
+        `${baseUrl}/messages/${currentChat?._id}`
+      );
+
+      setIsMessagesLoading(false);
+
+      if (response?.error) {
+        setMessagesError(response);
+      }
+
+      setMessages(response);
+    };
+
+    fetchMessages();
+  }, [currentChat]);
+
+  const updateCurrentChat = useCallback((chat) => {
+    setCurrentChat(chat);
+  }, []);
+
   return (
     <ChatContext.Provider
       value={{
@@ -70,6 +117,11 @@ export const ChatProvider = ({ children, user }) => {
         setChatErrors,
         setChatLoading,
         friends,
+        createChat,
+        updateCurrentChat,
+        currentChat,
+        messages,
+        isMessagesLoading,
       }}
     >
       {children}
