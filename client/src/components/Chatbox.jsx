@@ -14,7 +14,6 @@ function Chatbox() {
   const { recipient } = useFetchRecipient(currentChat, user);
   const [textMessage, setTextMessage] = useState("");
 
-  console.log(textMessage);
 
   if (!recipient)
     return (
