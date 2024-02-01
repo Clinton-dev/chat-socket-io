@@ -9,10 +9,12 @@ export const ChatProvider = ({ children, user }) => {
   const [chatErrors, setChatErrors] = useState(null);
   const [chatLoading, setChatLoading] = useState(false);
 
-  const [currentChat, setCurrentChat] = useState(null);
+  const [currentChat, setCurrentChat] = useState({});
   const [messages, setMessages] = useState(null);
   const [isMessagesLoading, setIsMessagesLoading] = useState(false);
   const [messagesError, setMessagesError] = useState(null);
+  const [sendTextMessageError, SetSendTextMessageError] = useState("");
+  const [newMessage, setNewMessage] = useState(null);
 
   const [friends, setFriends] = useState([]);
 
@@ -83,6 +85,33 @@ export const ChatProvider = ({ children, user }) => {
     // append the response which is a chat to list of users chats
   }, []);
 
+  const sendTextMessage = useCallback(
+    async (textMessage, sender, currentChatId, setTextMessage) => {
+      if (!textMessage) return console.log("message must have text");
+
+      const response = await postRequest(
+        `${baseUrl}/messages`,
+        JSON.stringify({
+          chatId: currentChatId,
+          senderId: sender?._id,
+          text: textMessage,
+        })
+      );
+
+      console.log("message creation response", response);
+
+      if (response.error) {
+        SetSendTextMessageError(response);
+        return console.log("message creation error", response);
+      }
+
+      setMessages((prevState) => [...prevState, response]);
+      setNewMessage(response);
+      setTextMessage("");
+    },
+    []
+  );
+
   useEffect(() => {
     const fetchMessages = async () => {
       setIsMessagesLoading(true);
@@ -122,6 +151,7 @@ export const ChatProvider = ({ children, user }) => {
         currentChat,
         messages,
         isMessagesLoading,
+        sendTextMessage,
       }}
     >
       {children}
